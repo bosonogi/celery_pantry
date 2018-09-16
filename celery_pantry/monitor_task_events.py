@@ -90,6 +90,6 @@ if __name__ == '__main__':
         broker='amqp://{}:{}@{}//'.format(
             os.getenv('MQ_USER', 'example'),
             os.getenv('MQ_PASS', 'publicsecret'),
-            os.getenv('MQ_HOST', 'localhost'),
+            os.getenv('MQ_HOST', 'mq'),
         )
     ))

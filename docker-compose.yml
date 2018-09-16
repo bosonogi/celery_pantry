@@ -24,7 +24,6 @@ services:
     image: celery_pantry_example:latest
     build:
       context: .
-      dockerfile: Dockerfile-example
     depends_on:
       - db
       - mq
@@ -43,3 +42,21 @@ services:
       - beat
     hostname: example-worker-2
     command: celery worker --app example_tasks -E
+
+  api:
+    image: celery_pantry_example:latest
+    depends_on:
+      - beat
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  monitor:
+    image: celery_pantry_example:latest
+    depends_on:
+      - api
+    command: python celery_pantry/monitor_task_events.py
+    restart: unless-stopped
+    environment:
+      DJANGO_SETTINGS_MODULE: example_project.settings
