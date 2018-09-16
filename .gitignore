@@ -1,6 +1,8 @@
 syntax: glob
 .idea
 .DS_Store
+build
+dist
 *.pyc
 *.*~
 *.egg-info
