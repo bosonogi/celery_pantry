@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_USER: example
+      POSTGRES_PASSWORD: publicsecret
+      POSTGRES_DB: pantry
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  mq:
+    image: rabbitmq:3.7-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: example
+      RABBITMQ_DEFAULT_PASS: publicsecret
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+
+  beat:
+    image: celery_pantry_example:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-example
+    depends_on:
+      - db
+      - mq
+    command: celery beat --app example_tasks
+
+  worker1:
+    image: celery_pantry_example:latest
+    depends_on:
+      - beat
+    hostname: example-worker-1
+    command: celery worker --app example_tasks -E
+
+  worker2:
+    image: celery_pantry_example:latest
+    depends_on:
+      - beat
+    hostname: example-worker-2
+    command: celery worker --app example_tasks -E

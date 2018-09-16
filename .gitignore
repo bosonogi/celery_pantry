@@ -1,0 +1,7 @@
+syntax: glob
+.idea
+.DS_Store
+*.pyc
+*.*~
+*.egg-info
+*.iml
