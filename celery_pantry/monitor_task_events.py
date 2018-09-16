@@ -53,11 +53,25 @@ class TaskEventMonitor:
             self.task_updates.put(task.as_dict())
 
     def save_task_updates(self):
+        import django
+        django.setup()
+
+        from celery_pantry.models import Task
+
         while self.save_tasks:
             try:
                 task = self.task_updates.get(timeout=2)
-                logger.info('task: %s', task)
-                # TODO: actually save the task info
+                logger.debug('task: %s', task)
+                task_id = task.pop('uuid')
+                task['worker'] = task['worker'].hostname
+
+                try:
+                    obj = Task.objects.get(id=task_id)
+                    obj.data = task
+                    obj.save()
+                except Task.DoesNotExist:
+                    Task.objects.create(id=task_id, data=task)
+
             except Empty:
                 continue
 
