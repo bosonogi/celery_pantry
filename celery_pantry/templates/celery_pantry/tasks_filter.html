@@ -1,0 +1,14 @@
+<h2>Task Data Conditions</h2>
+<form>
+    {% for condition, value in conditions.items %}
+    <div class="form-group">
+        <label for="{{ condition }}" class="control-label">{{ condition }}</label>
+        <input type="text" class="form-control textinput" style="width: 350px"
+               name="{{ condition }}" value="{{ value }}">
+    </div>
+    {% endfor %}
+
+    <button class="btn btn-default" type="submit">
+        <span class="glyphicon glyphicon-search" aria-hidden="true">Search</span>
+    </button>
+</form>
