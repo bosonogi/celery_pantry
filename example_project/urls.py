@@ -22,7 +22,7 @@ import celery_pantry.views
 
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'tasks', celery_pantry.views.TaskViewSet)
+router.register(r'tasks', celery_pantry.views.TaskViewSet, base_name='task')
 
 
 urlpatterns = [
