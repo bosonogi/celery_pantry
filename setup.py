@@ -40,7 +40,7 @@ def find_package_data(package_path, *data_paths):
 
 setuptools.setup(
     name='celery_pantry',
-    packages=['celery_pantry'],
+    packages=setuptools.find_packages(exclude=('example_project',)),
     version=celery_pantry.__version__,
     description='Monitor and archive Celery task information',
     long_description=README,
