@@ -37,6 +37,8 @@ class TaskEventMonitor:
                 })
                 self.receiver.capture()
         except KeyboardInterrupt:
+            pass
+        finally:
             self.stop()
 
     def stop(self, *args):
