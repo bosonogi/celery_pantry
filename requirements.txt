@@ -1,5 +1,0 @@
-celery~=4.2
-Django~=2.1
-coreapi~=2.3
-djangorestframework~=3.8
-psycopg2-binary~=2.7
