@@ -47,7 +47,7 @@ REST_FRAMEWORK = {
 }
 
 CELERY_PANTRY = {
-    'CUSTOM_HANDLER': 'celery_pantry.monitor_task_events.TaskEventMonitor',
+    'CUSTOM_HANDLER': 'example_project.monitor_workers.WorkerMonitor',
 }
 
 MIDDLEWARE = [
