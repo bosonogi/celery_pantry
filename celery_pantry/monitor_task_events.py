@@ -3,6 +3,7 @@
 import os
 import logging
 import threading
+import traceback
 from queue import Queue, Empty
 from signal import signal, SIGTERM
 
@@ -74,6 +75,7 @@ class TaskEventMonitor:
         from celery_pantry.models import Task
 
         while self.save_tasks:
+            # noinspection PyBroadException
             try:
                 task = self.task_updates.get(timeout=2)
                 logger.debug('task: %s', task)
@@ -89,6 +91,10 @@ class TaskEventMonitor:
 
             except Empty:
                 continue
+
+            except Exception:  # noqa
+                logger.warning('Exception in task update thread: %s',
+                               traceback.format_exc())
 
 
 def monitor(app):
