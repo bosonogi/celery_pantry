@@ -46,6 +46,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
+CELERY_PANTRY = {
+    'CUSTOM_HANDLER': 'celery_pantry.monitor_task_events.TaskEventMonitor',
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

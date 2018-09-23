@@ -24,6 +24,16 @@ class TaskEventMonitor:
             name='TaskEventMonitor worker'
         )
 
+        from celery_pantry.settings import pantry_settings
+
+        handler_class = pantry_settings.CUSTOM_HANDLER
+        if handler_class:
+            from celery_pantry.custom_handler import CustomPantryHandler
+            assert issubclass(handler_class, CustomPantryHandler)
+            self._custom_handler = handler_class(self.state)
+        else:
+            self._custom_handler = None
+
         signal(SIGTERM, self.stop)
 
     def capture(self):
@@ -50,14 +60,17 @@ class TaskEventMonitor:
 
     def process_event(self, event):
         self.state.event(event)
+
         if event['type'].startswith('task-'):
             task = self.state.tasks.get(event['uuid'])
             self.task_updates.put(task.as_dict())
+        else:
+            task = None
+
+        if self._custom_handler:
+            self._custom_handler.process_event(event, task)
 
     def save_task_updates(self):
-        import django
-        django.setup()
-
         from celery_pantry.models import Task
 
         while self.save_tasks:
@@ -83,10 +96,14 @@ def monitor(app):
 
 
 if __name__ == '__main__':
+    import django
+
+    django.setup()
     logging.basicConfig(
         level=getattr(logging, os.getenv('LOGGING_LEVEL', 'INFO')),
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
+
     monitor(Celery(
         os.getenv('CELERY_APP_NAME', 'example_tasks'),
         broker='amqp://{}:{}@{}//'.format(
