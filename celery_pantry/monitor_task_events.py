@@ -69,7 +69,12 @@ class TaskEventMonitor:
             task = None
 
         if self._custom_handler:
-            self._custom_handler.process_event(event, task)
+            # noinspection PyBroadException
+            try:
+                self._custom_handler.process_event(event, task)
+            except Exception:  # noqa
+                logger.warning('Exception in custom handler: %s',
+                               traceback.format_exc())
 
     def save_task_updates(self):
         from celery_pantry.models import Task
