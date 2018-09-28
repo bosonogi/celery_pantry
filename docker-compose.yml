@@ -56,7 +56,7 @@ services:
     image: celery_pantry_example:latest
     depends_on:
       - api
-    command: python celery_pantry/monitor_task_events.py
+    command: python -m celery_pantry.monitor_task_events
     restart: unless-stopped
     environment:
       DJANGO_SETTINGS_MODULE: example_project.settings
