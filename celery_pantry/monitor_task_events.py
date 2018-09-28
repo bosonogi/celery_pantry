@@ -54,9 +54,12 @@ class TaskEventMonitor:
 
     def stop(self, *args):
         logger.info('Stopping worker...')
+        self.save_tasks = False
         if self.receiver:
             self.receiver.should_stop = True
-        self.save_tasks = False
+        if self._custom_handler:
+            self._custom_handler.stop()
+
         self.worker_thread.join()
         logger.info('Worker stopped')
 

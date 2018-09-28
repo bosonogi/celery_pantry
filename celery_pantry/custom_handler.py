@@ -9,3 +9,6 @@ class CustomPantryHandler(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def process_event(self, event, task):
         pass
+
+    def stop(self):
+        pass
