@@ -51,10 +51,10 @@ setuptools.setup(
     license='MIT',
     platforms=['any'],
     install_requires=[
-        "celery~=4.2",
-        "Django~=2.1",
-        "coreapi~=2.3",
-        "djangorestframework~=3.8",
+        "celery>=4.0",
+        "Django>=2.0",
+        "coreapi>=2.3",
+        "djangorestframework>=3.8",
         "psycopg2-binary~=2.7",
     ],
     package_data={
