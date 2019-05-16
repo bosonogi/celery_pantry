@@ -119,11 +119,13 @@ if __name__ == '__main__':
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
 
-    monitor(Celery(
-        os.getenv('CELERY_APP_NAME', 'example_tasks'),
-        broker='amqp://{}:{}@{}//'.format(
-            os.getenv('MQ_USER', 'example'),
-            os.getenv('MQ_PASS', 'publicsecret'),
-            os.getenv('MQ_HOST', 'mq'),
-        )
-    ))
+    app = Celery(os.getenv('CELERY_APP_NAME', 'example_tasks'),
+                 broker='amqp://{}:{}@{}//'.format(
+                     os.getenv('MQ_USER', 'example'),
+                     os.getenv('MQ_PASS', 'publicsecret'),
+                     os.getenv('MQ_HOST', 'mq'),
+                 ))
+    config = os.getenv('CELERY_CONFIG_OBJECT')
+    if config:
+        app.config_from_object(config)
+    monitor(app)
