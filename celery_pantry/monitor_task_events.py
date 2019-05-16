@@ -89,7 +89,8 @@ class TaskEventMonitor:
                 task = self.task_updates.get(timeout=2)
                 logger.debug('task: %s', task)
                 task_id = task.pop('uuid')
-                task['worker'] = task['worker'].hostname
+                if task['worker'] is not None:
+                    task['worker'] = task['worker'].hostname
 
                 try:
                     obj = Task.objects.get(id=task_id)
