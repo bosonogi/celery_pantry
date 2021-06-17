@@ -95,15 +95,15 @@ class TaskEventMonitor:
                 try:
                     obj = Task.objects.get(id=task_id)
 
-                    # There can be tasks that are older that the monitor
-                    # or running tasks that the monitor "forgot about".
-                    # In that case task data in memory will contain null values
-                    # for some keys.
-                    # Only write non-null keys for existing keys in
-                    # task data object from the database
+                    # There can be running tasks that:
+                    #   - are older than the monitor
+                    #   - the monitor "forgot about" (LRU cache...).
+                    # In those cases task data in memory will contain null
+                    # values for some keys that might be non-null in the DB
                     for key, value in task.items():
                         if key in obj.data:
                             if value is not None:
+                                # Only write non-null values for existing keys
                                 obj.data[key] = value
                         else:
                             obj.data[key] = value
