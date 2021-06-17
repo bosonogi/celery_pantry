@@ -94,8 +94,22 @@ class TaskEventMonitor:
 
                 try:
                     obj = Task.objects.get(id=task_id)
-                    obj.data = task
+
+                    # There can be tasks that are older that the monitor
+                    # or running tasks that the monitor "forgot about".
+                    # In that case task data in memory will contain null values
+                    # for some keys.
+                    # Only write non-null keys for existing keys in
+                    # task data object from the database
+                    for key, value in task.items():
+                        if key in obj.data:
+                            if value is not None:
+                                obj.data[key] = value
+                        else:
+                            obj.data[key] = value
+
                     obj.save()
+
                 except Task.DoesNotExist:
                     Task.objects.create(id=task_id, data=task)
 
