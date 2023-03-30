@@ -74,7 +74,7 @@ class TaskViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Task.objects.all()
     serializer_class = serializers.TaskSerializer
     lookup_field = 'id'
-    lookup_value_regex = '[a-z0-9._-]+'
+    lookup_value_regex = '[a-zA-Z0-9._-]+'
     filter_backends = (OrderingFilter, TasksFilter)
     ordering_fields = ('first_saved',)
     ordering = ('-first_saved',)
